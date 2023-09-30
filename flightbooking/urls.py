@@ -21,7 +21,7 @@ urlpatterns = [
     # ... other URL patterns ...
 
     # Include the router's URLs under 'api/'
-    path('flight/', include(router.urls)),
+    path('bookings/', include(router.urls)),
     
     # Add the custom action URL for booking creation
     path('flight/bookings-create/create_booking/', booking_create_view, name='booking-create-action'),

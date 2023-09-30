@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'skisub',
     'knox',
     'flightbooking',
-    'rest_framework'
+    'rest_framework',
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-AUTH_USER_MODEL = "skisub.Skisubuser"
+AUTH_USER_MODEL = "account.Skisubuser"
 
 ROOT_URLCONF = 'skisubpro.urls'
 

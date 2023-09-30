@@ -6,28 +6,7 @@ from .models import Booking, Flight
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = [ 'adults', 'children']
-
-
-
-# class BookingCreate(serializers.ModelSerializer):
-#     serializer_class = BookingSerializer
-
-#     def perform_create(self, serializer):
-#         # Retrieve data from serializer
-#         departure_location = serializer.validated_data['departure_location']
-#         destination = serializer.validated_data['destination']
-#         adults = serializer.validated_data['adults']
-#         children = serializer.validated_data['children']
-
-#         # Retrieve the flight based on departure_location and destination
-#         flight = Flight.objects.get(departure_location=departure_location, destination=destination)
-
-#         # Calculate the total_amount
-#         total_amount = (adults * flight.price) + (children * (flight.price * 0.5))
-
-#         # Create the Booking instance with the calculated total_amount
-#         serializer.save(flight=flight, total_amount=total_amount)
+        fields = ['id','flight','adults','children','total_amount','trip_type']
 
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,19 +16,22 @@ class FlightSerializer(serializers.ModelSerializer):
         flight=Flight.objects.create(
         departure_location=self.validated_data['departure_location'],
         destination=self.validated_data['destination'],
-        price=self.validated_data['price'])
+        adult_price=self.validated_data['adult_price'],
+        child_price=self.validated_data['child_price'],
+        )
         return flight
     
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model=Booking
-        fields=['flight','adults','children','total_amount']
+        fields=['id','flight','adults','children','total_amount','trip_type']
 
     def Create(self, validated_data):
         booking=Booking.objects.create(
             flight=self.validated_data.pop('flight'),
             adults=self.validated_data['adults'],
             children=self.validated_data['children'],
+            trip_type=self.validated_data['trip_type'],
             total_amount=self.validated_data['total_amount']
         )
         

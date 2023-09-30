@@ -25,10 +25,11 @@ router.register('billoperation',views.BillOperationViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path("login/",views.LoginView.as_view()),
-    path("signup/",views.RegisterView.as_view()),
-    path("logout/",views.LogoutView.as_view()),
+    # path("login/",views.LoginView.as_view()),
+    # path("signup/",views.RegisterView.as_view()),
+    # path("logout/",views.LogoutView.as_view()),
 
-    path('flight/bookings/', include('flightbooking.urls'))
+    path('flight/', include('flightbooking.urls')),
+    path('account/', include('account.urls'))
 ]
 
