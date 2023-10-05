@@ -29,7 +29,7 @@ class BookingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Booking
-        fields = ('car','cars', 'start_date', 'end_date', 'is_approved', 'total_amount')
+        fields = ('car','cars', 'start_date', 'end_date','pickup_time','dropoff_time','age', 'is_approved', 'total_amount')
     def to_representation(self, instance):
         data = super().to_representation(instance)
         car = instance.car
@@ -85,6 +85,9 @@ class BookingSerializer(serializers.ModelSerializer):
         instance.car = validated_data.get('car', instance.car)
         instance.start_date = validated_data.get('start_date', instance.start_date)
         instance.end_date = validated_data.get('end_date', instance.end_date)
+        instance.pickup_time = validated_data.get('pickup_time', instance.pickup_time)
+        instance.dropoff_time = validated_data.get('dropoff_time', instance.dropoff_time)
+        instance.age = validated_data.get('age', instance.age)
         instance.is_approved = validated_data.get('is_approved', instance.is_approved)
 
         # Check if the selected time for picking falls within the car's available range

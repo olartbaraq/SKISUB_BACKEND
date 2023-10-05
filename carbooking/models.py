@@ -93,6 +93,7 @@
 #         return f'Booking for {self.car.model.make.name} --- {self.car.model.name}'
 from datetime import date
 from django.db import models
+from datetime import time
 
 class CarMake(models.Model):
     name = models.CharField(max_length=100)
@@ -130,6 +131,9 @@ class Booking(models.Model):
     end_date = models.DateField(default=date.today)
     is_approved = models.BooleanField(default=False)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    pickup_time = models.TimeField()  # Set default pickup time to 8:00 AM
+    dropoff_time = models.TimeField()  # Set default dropoff time to 5:00 PM
+    age = models.IntegerField(default=18) 
 
     def __str__(self):
         return f'Booking for {self.car.model.make.name} --- {self.car.model.name}'
