@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
 
 from skisub import views
 router=DefaultRouter()
@@ -30,6 +32,10 @@ urlpatterns = [
     # path("logout/",views.LogoutView.as_view()),
 
     path('flight/', include('flightbooking.urls')),
-    path('account/', include('account.urls'))
+    path('account/', include('account.urls')),
+    # path('car/', include('carbooking.urls')),
+    path('car/',include('carbook.urls')),
+    path('hotel/', include('hotelbooking.urls')),
 ]
-
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
