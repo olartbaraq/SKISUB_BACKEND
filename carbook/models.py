@@ -1,6 +1,7 @@
 from datetime import date
 from django.db import models
 from datetime import time
+from account.models import Skisubuser
 
 class CarMake(models.Model):
     name = models.CharField(max_length=100)
@@ -23,6 +24,7 @@ class CarImage(models.Model):
         return f'Image for {self.car}'
 
 class Car(models.Model):
+    
     model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name='cars')
     year = models.PositiveIntegerField()
     available = models.BooleanField(default=True)
@@ -33,6 +35,7 @@ class Car(models.Model):
         return f'{self.model.make.name} --- {self.model.name}'
 
 class Booking(models.Model):
+    # user=models.ForeignKey(Skisubuser,on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     start_date = models.DateField(default=date.today)
     end_date = models.DateField(default=date.today)

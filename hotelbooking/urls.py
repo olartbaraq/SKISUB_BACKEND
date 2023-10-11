@@ -1,12 +1,13 @@
+from django.urls import include, path
 from rest_framework import routers
-from django.urls import path, include
-from .views import HotelViewSet, BookingViewSet
+
+from hotelbooking.views import HotelBookingViewSet, HotelViewSet
 
 router = routers.DefaultRouter()
-router.register(r'hotels', HotelViewSet,basename='hotel')
-router.register(r'bookings', BookingViewSet,basename='customhotel')
+router.register(r'hotels', HotelViewSet)
+router.register(r'hotelbooking', HotelBookingViewSet,basename='booking')
 
 urlpatterns = [
-    path('', include(router.urls)),
-    # Add any custom API endpoints or URL patterns as needed
+    # Your other URL patterns
+    path('api/', include(router.urls)),
 ]

@@ -117,4 +117,3 @@ class BookingSerializer(serializers.ModelSerializer):
         # else:
         #   raise serializers.ValidationError("Car not available")
 
-

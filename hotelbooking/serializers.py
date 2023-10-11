@@ -1,57 +1,67 @@
 from rest_framework import serializers
-from decimal import Decimal, ROUND_DOWN
-from .models import Hotel, Booking
+from hotelbooking.models import Amenity, Booking, Hotel, HotelImage
 
-class HotelSerializer(serializers.ModelSerializer):
+class AmenitySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Amenity
+        fields="__all__"
+
+class HotelImageSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = HotelImage
+        fields="__all__"
+
+class HotelSerializers(serializers.ModelSerializer):
+    amenities = AmenitySerializers(many=True)
+    images = HotelImageSerializers(many=True)
+
     class Meta:
         model = Hotel
-        fields = '__all__'
-
-class BookingSerializer(serializers.ModelSerializer):
-    hotel_data = HotelSerializer(source='hotel', read_only=True)
-    class Meta:
-        model = Booking
-        fields = ('id','hotel_data','hotel', 'check_in_date', 'check_out_date', 'total_amount')
+        fields = ['id','name', 'price_per_day', 'available', 'description', 'location', 'amenities', 'images']
 
     def create(self, validated_data):
-        # Calculate the duration in days
-        duration = (validated_data['check_out_date'] - validated_data['check_in_date']).days
+        amenities_data = validated_data.pop('amenities', [])
+        images_data = validated_data.pop('images', [])
 
-        # Get the price per day from the associated Hotel model as Decimal
-        price_per_day = Decimal(validated_data['hotel'].price_per_day)
+        hotel = Hotel.objects.create(**validated_data)
 
-        # Calculate the total amount as a Decimal
-        total_amount = price_per_day * Decimal(duration)
+        for amenity in amenities_data:
+            amenity_obj, created = Amenity.objects.get_or_create(**amenity)
+            hotel.amenities.add(amenity_obj)
 
-        # Assign the Decimal total_amount to validated_data
+        for image in images_data:
+            image_obj, created = HotelImage.objects.get_or_create(**image)
+            hotel.images.add(image_obj)
+
+        return hotel
+
+
+
+class HotelBookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['id', 'hotel', 'check_in_date', 'check_out_date', 'total_amount']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['hotel'] = HotelSerializers(instance.hotel).data
+        return representation
+
+    def create(self, validated_data):
+        hotel = validated_data['hotel']
+        check_in_date = validated_data['check_in_date']
+        check_out_date = validated_data['check_out_date']
+
+        # Calculate the number of days between check-in and check-out
+        delta = check_out_date - check_in_date
+        total_days = delta.days
+
+        # Calculate the total amount based on the hotel's price and the number of days
+        total_amount = hotel.price_per_day * total_days
+
         validated_data['total_amount'] = total_amount
 
-        # Call the parent class's create() method to create the Booking object
-        booking_instance = Booking.objects.create(**validated_data)
+        booking = Booking.objects.create(**validated_data)
+        return booking
 
-        # Return the created Booking object
-        return booking_instance
 
-    def update(self, instance, validated_data):
-        # Update the Booking object with the validated_data
-        instance.hotel = validated_data.get('hotel', instance.hotel)
-        instance.check_in_date = validated_data.get('check_in_date', instance.check_in_date)
-        instance.check_out_date = validated_data.get('check_out_date', instance.check_out_date)
-
-        # Calculate the duration in days
-        duration = (instance.check_out_date - instance.check_in_date).days
-
-        # Get the price per day from the associated Hotel model as Decimal
-        price_per_day = Decimal(instance.hotel.price_per_day)
-
-        # Calculate the total amount as a Decimal
-        total_amount = price_per_day * Decimal(duration)
-
-        # Update the total_amount field
-        instance.total_amount = total_amount
-
-        # Save the updated Booking object
-        instance.save()
-
-        # Return the updated Booking object
-        return instance
