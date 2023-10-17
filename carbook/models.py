@@ -17,11 +17,8 @@ class CarModel(models.Model):
         return self.name
 
 class CarImage(models.Model):
-    car = models.ForeignKey('Car', on_delete=models.CASCADE, related_name='car_images')  # Specify a unique related_name here
+   
     image = models.ImageField(upload_to='car_images/')
-
-    def __str__(self):
-        return f'Image for {self.car}'
 
 class Car(models.Model):
     
@@ -29,13 +26,13 @@ class Car(models.Model):
     year = models.PositiveIntegerField()
     available = models.BooleanField(default=True)
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    image = models.ManyToManyField(CarImage, blank=True, related_name='cars_images')  # Specify a unique related_name here
-
+    image = models.ManyToManyField(CarImage, related_name='cars_images')  # Specify a unique related_name here
+    
     def __str__(self):
         return f'{self.model.make.name} --- {self.model.name}'
 
 class Booking(models.Model):
-    # user=models.ForeignKey(Skisubuser,on_delete=models.CASCADE)
+    user=models.ForeignKey(Skisubuser,on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     start_date = models.DateField(default=date.today)
     end_date = models.DateField(default=date.today)

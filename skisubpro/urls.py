@@ -36,6 +36,7 @@ urlpatterns = [
     # path('car/', include('carbooking.urls')),
     path('car/',include('carbook.urls')),
     path('hotel/', include('hotelbooking.urls')),
+    path('hotelad/', include('hotelbooking.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

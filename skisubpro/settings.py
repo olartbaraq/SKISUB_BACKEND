@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -47,6 +48,16 @@ INSTALLED_APPS = [
     'account',
     'carbook'
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+        # ... other authentication classes if needed
+    ],
+}
+KNOX = {
+    'TOKEN_TTL': timedelta(hours=1),  # Set token expiration time
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 AUTH_USER_MODEL = "account.Skisubuser"
 
 ROOT_URLCONF = 'skisubpro.urls'

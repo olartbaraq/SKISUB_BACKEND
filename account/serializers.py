@@ -34,18 +34,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = Skisubuser.objects.create(
-            username=validated_data['username'],
+            
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            # created_date=validated_data['created_date'],
-            # updated_date=validated_data['updated_date'],
-            is_active=validated_data['is_active'],
-            # is_user=validated_data['is_user'],
-            is_admin=validated_data['is_admin'],
-            phone=validated_data['phone'],
-            # status=validated_data['status'],
-            is_staff=validated_data['is_staff'], 
+           
         )
         user.set_password(validated_data['password'])
         user.save()
